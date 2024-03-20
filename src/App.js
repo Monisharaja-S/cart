@@ -3,6 +3,25 @@ import './App.css';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import Card from './Card';
+import Navbar from './Navbar';
+
+function App() {
+  const [cartItems, setCartItems] = useState([]); // State to keep track of cart items
+
+  // Function to handle adding or removing items from the cart
+  const handleCartChange = (product) => {
+    const existingIndex = cartItems.findIndex(item => item.id === product.id);
+    if (existingIndex !== -1) {
+      // Remove item if already in cart
+      const updatedCart = [...cartItems];
+      updatedCart.splice(existingIndex, 1);
+      setCartItems(updatedCart);
+    } else {
+      // Add item if not in cart
+      setCartItems([...cartItems, product]);
+    }
+  };
+
 
 const products = [
   {id:1,
@@ -56,7 +75,7 @@ const products = [
 
 return (
   <div className="App">
-         
+          <Navbar count={cartItems.length} />
     <header>
     <div className="col-12 p-5" id="header">
 <h1 >Shop in style</h1>
@@ -66,7 +85,7 @@ return (
    
       <div className="row row-cols-lg-4 row-cols-md-3 row-cols-sm-2 g-4 m-5">
         {products.map((product) => (
-          <Card key={product.id} product={product}  />
+          <Card key={product.id} product={product} handleCartChange={handleCartChange} isInCart={cartItems.some(item => item.id === product.id)} />
         ))}
       </div>
     
